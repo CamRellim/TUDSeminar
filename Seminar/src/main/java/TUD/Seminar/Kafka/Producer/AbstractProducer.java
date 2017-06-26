@@ -26,7 +26,7 @@ public abstract class AbstractProducer extends Thread {
 	/** The kafka producer. */
 	private Producer<String, String> producer;
 	
-	/** flag to indicate re-initializing before the next run */
+	/** flag to indicate if producer is running or currently stopped */
 	private boolean running = false;
 
 	/**
@@ -76,8 +76,8 @@ public abstract class AbstractProducer extends Thread {
 	}
 
 	
-	public void constructJSON(String topic, Order order){
-		producer.send(new ProducerRecord<String, String>(topic, order.getJSONString()));
+	public void sendMessage(String topic, String json){
+		producer.send(new ProducerRecord<String, String>(topic, json));
 	}
 
 	@Override

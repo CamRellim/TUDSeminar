@@ -41,29 +41,12 @@ public class MongoDBConnector {
 	 * @param collection
 	 *            - collection in which the data will be stored
 	 */
-	public String writeToDb(Document obj, String collection) {
+	public void writeToDb(Document obj, String collection) {
+		
 		MongoCollection<Document> table = database.getCollection(collection);
 		table.insertOne(obj);
-		
-		BasicDBObject query = new BasicDBObject();
-		query.put("link", obj.getString("link"));
-		query.put("company", obj.getString("company"));
-		query.put("category", obj.getString("category"));
-		query.put("keyword", obj.getString("keyword"));
-		for(Document doc : table.find(query)){
-			return doc.get("_id").toString();
-		}
-		return null;
 	}
 	
-	/**
-	 * Gets every collection name contained in the database
-	 * @return - names of every collection in the database
-	 */
-	public MongoIterable<String> getAllCollectionNames(){
-		return database.listCollectionNames();
-	}
-
 	/**
 	 * Gets the collection for the given name.
 	 * 
@@ -71,28 +54,13 @@ public class MongoDBConnector {
 	 *            - name of the collection to retrieve
 	 * @return
 	 */
-	public MongoCollection<Document> getCollection(String name) {
+	private MongoCollection<Document> getCollection(String name) {
+		
 		return database.getCollection(name);
 	}
-	
-	/**
-	 * Executes a query to find specific data
-	 * @param collection - the collection to be searched
-	 * @param hm - A HashMap which contains all values to be searched for
-	 * @return true if found else false
-	 */
-	public boolean contains(String collection, HashMap<String, String> hm){
-		BasicDBObject query = new BasicDBObject();
-		query.putAll(hm);
 		
-		for(Document doc : getCollection(collection).find(query))
-			return true;
-		
-		return false;
-	}
-	
 	/**
-	 * Executes a query to find specific data
+	 * Executes a query to find specific data and returns it as a LinkedList<Document>
 	 * @param collection - the collection to be searched
 	 * @return - LinkedList with all found documents
 	 */
@@ -120,6 +88,17 @@ public class MongoDBConnector {
 			data.add(doc);
 		
 		return data;
+	}
+	
+	/**
+	 * Executes a query to find specific data
+	 * @param collection - the collection to be searched
+	 * @param hm - A HashMap which contains all values to be searched for
+	 * @return - LinkedList with all found documents
+	 */
+	public long count(String collection){
+		
+		return getCollection(collection).count();
 	}
 	
 	/**

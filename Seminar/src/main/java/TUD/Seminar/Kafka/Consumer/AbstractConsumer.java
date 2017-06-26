@@ -18,8 +18,6 @@ import org.json.JSONObject;
 public abstract class AbstractConsumer extends Thread {
 	/** The kafka consumer. */
 	private KafkaConsumer<String, String> consumer;
-	/** flag to indicate re-initializing before the next run */
-	private boolean reload = false;
 
 	/**
 	 * Constructor that handles loading from configuration files. Creates the
@@ -42,12 +40,6 @@ public abstract class AbstractConsumer extends Thread {
 	}
 	
 	/**
-	 * Here you should setup everything that only needs to be initialized after
-	 * startup or on reload e.g loading the keyword list.
-	 */
-	abstract void initializeNeededData();
-
-	/**
 	 * Works on a single data object.
 	 * @param json The object containing the articles.
 	 */
@@ -60,17 +52,9 @@ public abstract class AbstractConsumer extends Thread {
 	public void subscribeToList(Collection<String> topics){
 		consumer.subscribe(topics);
 	}
-	
-	/**
-	 * Sets the reload flag.
-	 */
-	public void reload() {
-		reload = true;
-	}
 
 	@Override
 	public void run() {
-		initializeNeededData();
 		while (true) {
 			ConsumerRecords<String, String> records = consumer.poll(10);
 			for (ConsumerRecord<String, String> record : records) {
@@ -82,11 +66,6 @@ public abstract class AbstractConsumer extends Thread {
 					continue;
 				}
 				consumeObject(json);
-			}
-			// If the reload flag is set re-init the data and continue running
-			if (reload) {
-				initializeNeededData();
-				reload = false;
 			}
 		}
 	}

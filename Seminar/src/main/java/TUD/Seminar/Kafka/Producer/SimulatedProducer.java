@@ -43,14 +43,13 @@ public class SimulatedProducer extends AbstractProducer {
 		
 		
 		Order order = new Order(UUID.randomUUID().toString(), new Date(), categories);
-		JSONObject json = new JSONObject(order.getJSONString());
 		try {
 			this.sleep(100);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		constructJSON("orders", order);	
+		sendMessage("orders", order.getJSONString());	
 	}
 
 }

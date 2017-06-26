@@ -47,9 +47,7 @@ public class BatchOperation extends TimerTask {
 			}	
 			mongoDBdoc.append("betas", mongoDBArray);
 			
-			System.err.println("saved: " + Arrays.toString(beta));
-			
-			mongo.getCollection(Constants.REGRESSION).insertOne(mongoDBdoc);
+			mongo.writeToDb(mongoDBdoc, Constants.REGRESSION);
 			
 			calculate();
 		}
@@ -60,14 +58,12 @@ public class BatchOperation extends TimerTask {
 		// resulting equation
 		System.out.println("started batch calculation");
 
-		MongoCollection<Document> collection = mongo.getCollection(Constants.RAWDATA);
-
-		batchSize = (int) collection.count();
+		batchSize = (int) mongo.count(Constants.RAWDATA);
 		double[] totalCartValue = new double[batchSize];
 		double[][] variables = new double[batchSize][Categories.getCategoryCount()];
 
 		int i = 0;
-		for (Document doc : collection.find()) {
+		for (Document doc : mongo.find(Constants.RAWDATA)) {
 
 			if(i > batchSize - 1)
 				break;

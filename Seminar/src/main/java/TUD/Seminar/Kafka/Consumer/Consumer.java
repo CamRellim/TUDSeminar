@@ -39,12 +39,6 @@ public class Consumer extends AbstractConsumer {
 	}
 
 	@Override
-	void initializeNeededData() {
-		//
-
-	}
-
-	@Override
 	void consumeObject(JSONObject json) {
 		// decocde the json and transform it into a product object
 		LinkedList<Category> categories = new LinkedList<>();
