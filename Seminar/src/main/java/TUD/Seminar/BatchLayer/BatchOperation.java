@@ -23,8 +23,8 @@ import TUD.Seminar.SimulatedStream.Categories;
 public class BatchOperation extends TimerTask {
 
 	MongoDBConnector mongo;
-	private static double[] beta;
-	private static int batchSize;
+	private double[] beta;
+	private int batchSize;
 
 	public BatchOperation() {
 		mongo = new MongoDBConnector(Constants.DATABASE);
@@ -37,7 +37,7 @@ public class BatchOperation extends TimerTask {
 		}
 		else{
 			// Create MongoDB Object an write it to the db
-			Document mongoDBdoc = new Document("date", new Date());
+			Document mongoDBdoc = new Document("date", new Date()).append("batchSize", batchSize);
 			
 			List<BasicDBObject> mongoDBArray = new LinkedList<>();
 			for(double b : beta){
@@ -81,19 +81,17 @@ public class BatchOperation extends TimerTask {
 			i++;
 		}
 		if (totalCartValue.length == variables.length && totalCartValue.length > 0 ) {
+			//regression
 			OLSMultipleLinearRegression regression = new OLSMultipleLinearRegression();
 			regression.setNoIntercept(true);
 			regression.newSampleData(totalCartValue, variables);
 			beta = regression.estimateRegressionParameters();
+			
+			//set GUI text
 			MainFrame.getInstance().setBatchLayerText(beta);
+			
+			//reload consumer
+			MainFrame.getInstance().reloadConsumer(beta, batchSize);
 		}
-	}
-
-	public static double[] getBatchCalculation() {
-		return Arrays.copyOf(beta, beta.length);
-	}
-
-	public static int getBatchSize() {
-		return batchSize;
 	}
 }

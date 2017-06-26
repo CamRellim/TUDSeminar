@@ -41,15 +41,19 @@ public class MainFrame extends JFrame {
 	JButton streamOnOff = new JButton();
 	JTextPane batchParams = new JTextPane();
 	JTextPane speedParams = new JTextPane();
-	JTextArea speedLayerText = new JTextArea(30, 80);
 
+	/**
+	 * Constructor is private so objects are only created by using the getInstance() method
+	 */
 	private MainFrame(){
 		this.setTitle("TUD Seminar");
-    	this.setSize(1500, 620);
+		//TODO: hier kannst du auch die Größen verändern, ist auch einfach random
+    	this.setSize(1500, 250);
     	this.setResizable(false);
     	this.setLocation(50, 50);
     	this.setVisible(true);
     	
+    	//TODO: hier musst du evtl das Layout ändern, hab einfach erstmal irgendeins genommen
     	this.setLayout(new FlowLayout());
     	
     	streamOnOff.setText("Start Streaming");
@@ -64,11 +68,12 @@ public class MainFrame extends JFrame {
     	Border border = BorderFactory.createLineBorder(Color.BLACK);
     	batchParams.setBorder(border);
     	batchParams.setEditable(false);
+    	//TODO: 609 und 159 kommt daher weil des Feld diese Größe annimmt wenn man keine fixe Größe einstellt
     	batchParams.setPreferredSize(new Dimension(609, 159));
     	
     	speedParams.setBorder(border);
     	speedParams.setEditable(false);
-    	speedParams.setPreferredSize(new Dimension(609, 550));
+    	speedParams.setPreferredSize(new Dimension(609, 159));
     	
     	//Add all components
     	this.add(streamOnOff);
@@ -97,12 +102,19 @@ public class MainFrame extends JFrame {
     	prod.start();
 	}
 	
+	/**
+	 * Singleton implementation so theres only one instance of this object.
+	 * @return - the instance of the JFrame object
+	 */
 	public static MainFrame getInstance(){
 		if(instance == null)
 			instance = new MainFrame();
 		return instance;
 	}
 	
+	/**
+	 * Handles a click on the start/stop stream button
+	 */
 	private void buttonClicked(){
 		
 		if(streamOnOff.getText().equals(startStreamText)){
@@ -115,14 +127,24 @@ public class MainFrame extends JFrame {
 		}
 	}
 	
+	/**
+	 * Starts the simulated stream
+	 */
 	private void startStream(){
 		prod.startProd();
 	}
 	
+	/**
+	 * Stops the simulated stream
+	 */
 	private void stopStream(){
 		prod.stopProd();
 	}
 	
+	/**
+	 * Sets the text of the field, where the speed layer calculation should be displayed, using a StyledDocument
+	 * @param params - an array of the calculated params
+	 */
 	public void setSpeedLayerText(double[] params){	
 		StyledDocument doc = speedParams.getStyledDocument();
 		
@@ -139,7 +161,7 @@ public class MainFrame extends JFrame {
 
 		
 		String date = new Date() + ": ";
-		String text = "Speed Layer Calculation with values:";
+		String text = "Adjusted Calculation with values:";
 		try {
 			//first remove all previous text
 			doc.remove(0, doc.getLength());
@@ -166,6 +188,10 @@ public class MainFrame extends JFrame {
 		speedParams.setStyledDocument(doc);;
 	}
 	
+	/**
+	 * Sets the text of the field, where the batch layer calculation should be displayed, using a StyledDocument.
+	 * @param params - an array of the calculated params
+	 */
 	public void setBatchLayerText(double[] params){	
 		StyledDocument doc = batchParams.getStyledDocument();
 		
@@ -207,5 +233,9 @@ public class MainFrame extends JFrame {
 		}
 		
 		batchParams.setStyledDocument(doc);;
+	}
+	
+	public void reloadConsumer(double[] betas, int batchSize){
+		consumer.reload(betas, batchSize);
 	}
 }

@@ -3,6 +3,7 @@ package TUD.Seminar.Kafka.Consumer;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -38,6 +39,28 @@ public class Consumer extends AbstractConsumer {
 		batchSize = 0;
 	}
 
+	@Override
+	void initializeNeededData() {
+		System.out.println("initializing");
+		Document doc = mongo.findLast(Constants.REGRESSION);
+		if(doc != null){
+			ArrayList<Document> betas = (ArrayList<Document>) doc.get("betas");
+			batchBeta = new double[Categories.getCategoryCount()];
+			int i = 0;
+			for (Document d : betas)
+				batchBeta[i++] = d.getDouble("value");
+			
+			adjustedBeta = Arrays.copyOf(batchBeta, batchBeta.length);
+			batchSize = doc.getInteger("batchSize");
+		}
+	}
+
+	public void reload(double[] betas, int batchSize) {
+		batchBeta = Arrays.copyOf(betas, betas.length);
+		adjustedBeta = Arrays.copyOf(batchBeta, batchBeta.length);
+		this.batchSize = batchSize;
+	}
+	
 	@Override
 	void consumeObject(JSONObject json) {
 		// decocde the json and transform it into a product object
@@ -103,21 +126,13 @@ public class Consumer extends AbstractConsumer {
 		double[] beta = regression.estimateRegressionParameters();
 		System.out.println("Speed Layer parameters: " + Arrays.toString(beta));
 
-		// get the batch calculation if its not already stored and adjust it
-		// with the parameters calculated before
-		if ((batchBeta == null && adjustedBeta == null && batchSize == 0)
-				|| Arrays.equals(batchBeta, BatchOperation.getBatchCalculation()) == false) {
-			batchBeta = BatchOperation.getBatchCalculation();
-			adjustedBeta = BatchOperation.getBatchCalculation();
-			batchSize = BatchOperation.getBatchSize();
+		if(batchBeta != null){
+			for (i = 0; i < Categories.getCategoryCount(); i++)
+				adjustedBeta[i] = (adjustedBeta[i] * batchSize + beta[i] * Constants.ORDER_SIZE)
+						/ (batchSize + Constants.ORDER_SIZE);
+			MainFrame.getInstance().setSpeedLayerText(adjustedBeta);
+			batchSize += Constants.ORDER_SIZE;
 		}
-
-		for (i = 0; i < Categories.getCategoryCount(); i++)
-			adjustedBeta[i] = (adjustedBeta[i] * batchSize + beta[i] * Constants.ORDER_SIZE)
-					/ (batchSize + Constants.ORDER_SIZE);
-		MainFrame.getInstance().setSpeedLayerText(adjustedBeta);
-
-		batchSize += Constants.ORDER_SIZE;
 		orders.clear();
 	}
 	

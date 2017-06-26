@@ -90,6 +90,11 @@ public class MongoDBConnector {
 		return data;
 	}
 	
+	public Document findLast(String collection){
+		return (Document)getCollection(collection).find().sort(new BasicDBObject("date", -1)).first();
+		
+	}
+	
 	/**
 	 * Executes a query to find specific data
 	 * @param collection - the collection to be searched

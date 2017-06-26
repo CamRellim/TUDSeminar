@@ -20,5 +20,8 @@ public class App
     {
     	//start the GUI
     	MainFrame frame = MainFrame.getInstance();
+//    	Consumer c = new Consumer("1");
+//    	c.subscribeToList(Arrays.asList("orders"));
+//    	c.start();
     }
 }
