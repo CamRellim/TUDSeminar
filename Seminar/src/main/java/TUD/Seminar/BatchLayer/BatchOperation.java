@@ -1,0 +1,103 @@
+package TUD.Seminar.BatchLayer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TimerTask;
+
+import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
+import org.bson.Document;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.client.MongoCollection;
+
+import TUD.Seminar.Constants.Constants;
+import TUD.Seminar.GUI.MainFrame;
+import TUD.Seminar.Kafka.Consumer.Consumer;
+import TUD.Seminar.MongoDB.MongoDBConnector;
+import TUD.Seminar.SimulatedStream.Categories;
+
+public class BatchOperation extends TimerTask {
+
+	MongoDBConnector mongo;
+	private static double[] beta;
+	private static int batchSize;
+
+	public BatchOperation() {
+		mongo = new MongoDBConnector(Constants.DATABASE);
+	}
+
+	@Override
+	public void run() {
+		if(beta == null){
+			calculate();
+		}
+		else{
+			// Create MongoDB Object an write it to the db
+			Document mongoDBdoc = new Document("date", new Date());
+			
+			List<BasicDBObject> mongoDBArray = new LinkedList<>();
+			for(double b : beta){
+				BasicDBObject o = new BasicDBObject();
+				o.put("value", b);
+				mongoDBArray.add(o);
+			}	
+			mongoDBdoc.append("betas", mongoDBArray);
+			
+			System.err.println("saved: " + Arrays.toString(beta));
+			
+			mongo.getCollection(Constants.REGRESSION).insertOne(mongoDBdoc);
+			
+			calculate();
+		}
+	}
+
+	public void calculate() {
+		// Do a regression of all collected orders and store the
+		// resulting equation
+		System.out.println("started batch calculation");
+
+		MongoCollection<Document> collection = mongo.getCollection(Constants.RAWDATA);
+
+		batchSize = (int) collection.count();
+		double[] totalCartValue = new double[batchSize];
+		double[][] variables = new double[batchSize][Categories.getCategoryCount()];
+
+		int i = 0;
+		for (Document doc : collection.find()) {
+
+			if(i > batchSize - 1)
+				break;
+			
+			@SuppressWarnings("unchecked")
+			ArrayList<Document> categories = (ArrayList<Document>) doc.get("categories");
+			double[] arr = new double[Categories.getCategoryCount()];
+			int j = 0;
+			for (Document category : categories)
+				arr[j++] = category.getInteger("quantity");
+
+			totalCartValue[i] = doc.getDouble("totalPrice");
+			variables[i] = arr;
+
+			i++;
+		}
+		if (totalCartValue.length == variables.length && totalCartValue.length > 0 ) {
+			OLSMultipleLinearRegression regression = new OLSMultipleLinearRegression();
+			regression.setNoIntercept(true);
+			regression.newSampleData(totalCartValue, variables);
+			beta = regression.estimateRegressionParameters();
+			MainFrame.getInstance().setBatchLayerText(beta);
+		}
+	}
+
+	public static double[] getBatchCalculation() {
+		return Arrays.copyOf(beta, beta.length);
+	}
+
+	public static int getBatchSize() {
+		return batchSize;
+	}
+}
