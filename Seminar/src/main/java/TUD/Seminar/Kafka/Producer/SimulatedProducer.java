@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.UUID;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import TUD.Seminar.SimulatedStream.Categories;
 import TUD.Seminar.SimulatedStream.Order;
@@ -33,19 +31,31 @@ public class SimulatedProducer extends AbstractProducer {
 			//Set individual price for each category
 			else{
 				if(category.equals(Categories.beauty))
-					price = Math.random() * 200;
+					price = Math.random() * 200;	
 				if(category.equals(Categories.books))
 					price = Math.random() * 150;
-				if(category.equals(Categories.clothing))
+				if(category.equals(Categories.clothing)){
 					price = Math.random() * 600;
-				if(category.equals(Categories.electronics))
+					if(price < 120)
+						price += 120;
+				}
+				if(category.equals(Categories.electronics)){
 					price = Math.random() * 1000;
+					if(price < 200)
+						price += 200;
+				}
 				if(category.equals(Categories.groceries))
 					price = Math.random() * 70;
-				if(category.equals(Categories.home))
+				if(category.equals(Categories.home)){
 					price = Math.random() * 450;
-				if(category.equals(Categories.sports))
+					if(price < 80)
+						price += 80;
+				}
+				if(category.equals(Categories.sports)){
 					price = Math.random() * 300;
+					if(price < 50)
+						price += 50;
+				}
 			}
 				
 			
