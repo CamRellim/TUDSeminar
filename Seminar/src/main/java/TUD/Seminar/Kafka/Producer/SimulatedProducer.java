@@ -30,8 +30,24 @@ public class SimulatedProducer extends AbstractProducer {
 			double price = 0d;
 			if(quantity == 0)
 				price = 0;
-			else
-				price = Math.random() * 1000;
+			//Set individual price for each category
+			else{
+				if(category.equals(Categories.beauty))
+					price = Math.random() * 200;
+				if(category.equals(Categories.books))
+					price = Math.random() * 150;
+				if(category.equals(Categories.clothing))
+					price = Math.random() * 600;
+				if(category.equals(Categories.electronics))
+					price = Math.random() * 1000;
+				if(category.equals(Categories.groceries))
+					price = Math.random() * 70;
+				if(category.equals(Categories.home))
+					price = Math.random() * 450;
+				if(category.equals(Categories.sports))
+					price = Math.random() * 300;
+			}
+				
 			
 			DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
 			dfs.setDecimalSeparator('.');

@@ -1,8 +1,10 @@
 package TUD.Seminar.GUI;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -14,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.border.Border;
@@ -38,6 +41,10 @@ public class MainFrame extends JFrame {
 	String startStreamText = "Start Streaming";
 	String stopStreamText = "Stop Streaming";
 	
+	JPanel flowPanel = new JPanel();
+	JTextPane titleText = new JTextPane();
+	JTextPane bottomText = new JTextPane();
+	
 	JButton streamOnOff = new JButton();
 	JTextPane batchParams = new JTextPane();
 	JTextPane speedParams = new JTextPane();
@@ -47,16 +54,15 @@ public class MainFrame extends JFrame {
 	 */
 	private MainFrame(){
 		this.setTitle("TUD Seminar");
-		//TODO: hier kannst du auch die Größen verändern, ist auch einfach random
-    	this.setSize(1500, 250);
+    	this.setSize(1500, 750);
     	this.setResizable(false);
-    	this.setLocation(50, 50);
+    	this.setLocation(100, 100);
     	this.setVisible(true);
     	
-    	//TODO: hier musst du evtl das Layout ändern, hab einfach erstmal irgendeins genommen
-    	this.setLayout(new FlowLayout());
+    	this.setLayout(new BorderLayout());
     	
     	streamOnOff.setText("Start Streaming");
+    	streamOnOff.setPreferredSize(new Dimension(150, 50));
     	streamOnOff.addActionListener(new ActionListener() {
 			
 			@Override
@@ -68,17 +74,51 @@ public class MainFrame extends JFrame {
     	Border border = BorderFactory.createLineBorder(Color.BLACK);
     	batchParams.setBorder(border);
     	batchParams.setEditable(false);
-    	//TODO: 609 und 159 kommt daher weil des Feld diese Größe annimmt wenn man keine fixe Größe einstellt
-    	batchParams.setPreferredSize(new Dimension(609, 159));
+    	batchParams.setPreferredSize(new Dimension(609, 318));
     	
     	speedParams.setBorder(border);
     	speedParams.setEditable(false);
-    	speedParams.setPreferredSize(new Dimension(609, 159));
+    	speedParams.setPreferredSize(new Dimension(609, 318));
     	
-    	//Add all components
-    	this.add(streamOnOff);
-    	this.add(batchParams);
-    	this.add(speedParams);
+    	//Add all components to FlowLayout
+    	flowPanel.add(streamOnOff);
+    	flowPanel.add(batchParams);
+    	flowPanel.add(speedParams);
+    	
+    	//Style for the FlowLayout panel
+    	flowPanel.setBackground(new Color(35, 47, 62));
+    	
+    	//Costumize Title
+    	titleText.setText("Lorem ipsum dolor sit amet, consetetur sadipscing elitr");
+    	titleText.setBackground(new Color(35, 47, 62));
+    	titleText.setEditable(false);
+    	titleText.setPreferredSize(new Dimension(300, 175));
+    	titleText.setFont(new Font(Font.SANS_SERIF, 3, 48));
+    	
+    	//Style for TitleText
+    	StyledDocument styleDoc = titleText.getStyledDocument();
+    	SimpleAttributeSet center = new SimpleAttributeSet();
+    	StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+    	StyleConstants.setForeground(center, new Color(255, 153, 0));
+    	styleDoc.setParagraphAttributes(0, styleDoc.getLength(), center, false);
+    	
+    	//Costumize bottomText
+    	bottomText.setText("At vero eos et accusam et justo duo dolores et ea rebum.");
+    	bottomText.setBackground(new Color(35, 47, 62));
+    	bottomText.setEditable(false);
+    	bottomText.setPreferredSize(new Dimension(300, 175));
+    	bottomText.setFont(new Font(Font.SANS_SERIF, 3, 48));
+    	
+    	//Style for BottomText
+    	StyledDocument styleDoc2 = bottomText.getStyledDocument();
+    	StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+    	StyleConstants.setForeground(center, new Color(255, 153, 0));
+    	styleDoc2.setParagraphAttributes(0, styleDoc2.getLength(), center, false);
+    	
+    	//Add components to BorderLayout
+    	this.add(titleText, BorderLayout.PAGE_START);
+    	this.add(flowPanel, BorderLayout.CENTER);
+    	this.add(bottomText, BorderLayout.PAGE_END);
    
     	
     	//Set a timer
@@ -150,18 +190,18 @@ public class MainFrame extends JFrame {
 		
 		SimpleAttributeSet title = new SimpleAttributeSet();
 		StyleConstants.setBold(title, true);
-		StyleConstants.setFontSize(title, 18);
+		StyleConstants.setFontSize(title, 26);
 		
 		SimpleAttributeSet cats = new SimpleAttributeSet();
 		StyleConstants.setBold(cats, true);
-		StyleConstants.setFontSize(cats, 14);
+		StyleConstants.setFontSize(cats, 22);
 		
 		SimpleAttributeSet values = new SimpleAttributeSet();
-		StyleConstants.setFontSize(values, 14);
+		StyleConstants.setFontSize(values, 22);
 
 		
-		String date = new Date() + ": ";
-		String text = "Adjusted Calculation with values:";
+		String date = new Date() + ": " + "\n";
+		String text = "Adjusted Calculation with values:" + "\n";
 		try {
 			//first remove all previous text
 			doc.remove(0, doc.getLength());
@@ -197,18 +237,18 @@ public class MainFrame extends JFrame {
 		
 		SimpleAttributeSet title = new SimpleAttributeSet();
 		StyleConstants.setBold(title, true);
-		StyleConstants.setFontSize(title, 18);
+		StyleConstants.setFontSize(title, 26);
 		
 		SimpleAttributeSet cats = new SimpleAttributeSet();
 		StyleConstants.setBold(cats, true);
-		StyleConstants.setFontSize(cats, 14);
+		StyleConstants.setFontSize(cats, 22);
 		
 		SimpleAttributeSet values = new SimpleAttributeSet();
-		StyleConstants.setFontSize(values, 14);
+		StyleConstants.setFontSize(values, 22);
 
 		
-		String date = new Date() + ": ";
-		String text = "Batch Layer Calculation with values:";
+		String date = new Date() + ": " + "\n";
+		String text = "Batch Layer Calculation with values:" + "\n";
 		try {
 			//first remove all previous text
 			doc.remove(0, doc.getLength());
