@@ -45,17 +45,21 @@ public class Consumer extends AbstractConsumer {
 		Document doc = mongo.findLast(Constants.REGRESSION);
 		if(doc != null){
 			ArrayList<Document> betas = (ArrayList<Document>) doc.get("betas");
+			
 			batchBeta = new double[Categories.getCategoryCount()];
-			int i = 0;
-			for (Document d : betas)
-				batchBeta[i++] = d.getDouble("value");
+			Categories[] categories = Categories.values();
+			for(int i = 0; i < Categories.getCategoryCount(); i++)
+				batchBeta[i] = betas.get(i).getDouble(categories[i].name());
 			
 			adjustedBeta = Arrays.copyOf(batchBeta, batchBeta.length);
 			batchSize = doc.getInteger("batchSize");
 		}
 	}
 
-	public void reload(double[] betas, int batchSize) {
+	public void reload(double[] betas, int batchSize, boolean running) {
+		if(running && adjustedBeta != null)
+			MainFrame.getInstance().setDeviationText(betas, adjustedBeta);
+		
 		batchBeta = Arrays.copyOf(betas, betas.length);
 		adjustedBeta = Arrays.copyOf(batchBeta, batchBeta.length);
 		this.batchSize = batchSize;
@@ -136,7 +140,7 @@ public class Consumer extends AbstractConsumer {
 		orders.clear();
 	}
 	
-	public double[] getSpeedCalc(){
-		return adjustedBeta;
+	private double[] getSpeedCalc(){
+		return Arrays.copyOf(adjustedBeta, adjustedBeta.length);
 	}
 }

@@ -40,9 +40,11 @@ public class BatchOperation extends TimerTask {
 			Document mongoDBdoc = new Document("date", new Date()).append("batchSize", batchSize);
 			
 			List<BasicDBObject> mongoDBArray = new LinkedList<>();
-			for(double b : beta){
+			Categories[] categories = Categories.values();
+			for(int i = 0; i < Categories.getCategoryCount(); i++){
+				double d = beta[i];
 				BasicDBObject o = new BasicDBObject();
-				o.put("value", b);
+				o.put(categories[i].name(), d);
 				mongoDBArray.add(o);
 			}	
 			mongoDBdoc.append("betas", mongoDBArray);
