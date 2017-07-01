@@ -3,7 +3,6 @@ package TUD.Seminar.GUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +24,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.Border;
@@ -42,6 +40,7 @@ import TUD.Seminar.SimulatedStream.Categories;
 
 public class MainFrame extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private static MainFrame instance = null;
 	boolean running = false;
 
@@ -460,5 +459,9 @@ public class MainFrame extends JFrame {
 
 	public void reloadConsumer(double[] betas, int batchSize) {
 		consumer.reload(betas, batchSize, running);
+	}
+	
+	public static void main(String[] args) {
+		getInstance();
 	}
 }

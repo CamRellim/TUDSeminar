@@ -16,13 +16,12 @@ import org.json.JSONObject;
 
 import com.mongodb.BasicDBObject;
 
-import TUD.Seminar.BatchLayer.BatchOperation;
 import TUD.Seminar.Constants.Constants;
 import TUD.Seminar.GUI.MainFrame;
 import TUD.Seminar.MongoDB.MongoDBConnector;
-import TUD.Seminar.SimulatedStream.Order;
 import TUD.Seminar.SimulatedStream.Categories;
 import TUD.Seminar.SimulatedStream.Category;
+import TUD.Seminar.SimulatedStream.Order;
 
 public class Consumer extends AbstractConsumer {
 
@@ -39,6 +38,7 @@ public class Consumer extends AbstractConsumer {
 		batchSize = 0;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	void initializeNeededData() {
 		System.out.println("initializing");
@@ -138,9 +138,5 @@ public class Consumer extends AbstractConsumer {
 			batchSize += Constants.ORDER_SIZE;
 		}
 		orders.clear();
-	}
-	
-	private double[] getSpeedCalc(){
-		return Arrays.copyOf(adjustedBeta, adjustedBeta.length);
 	}
 }

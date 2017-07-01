@@ -1,9 +1,7 @@
 package TUD.Seminar.Kafka.Consumer;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;

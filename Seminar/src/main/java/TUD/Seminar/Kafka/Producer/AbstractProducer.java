@@ -1,19 +1,10 @@
 package TUD.Seminar.Kafka.Producer;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.bson.Document;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import TUD.Seminar.MongoDB.MongoDBConnector;
-import TUD.Seminar.SimulatedStream.Order;
 
 
 /**

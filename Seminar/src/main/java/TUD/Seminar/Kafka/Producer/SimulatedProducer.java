@@ -7,16 +7,14 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.UUID;
 
-
 import TUD.Seminar.SimulatedStream.Categories;
-import TUD.Seminar.SimulatedStream.Order;
 import TUD.Seminar.SimulatedStream.Category;
+import TUD.Seminar.SimulatedStream.Order;
 
 public class SimulatedProducer extends AbstractProducer {
 
 	public SimulatedProducer(String env) {
 		super(env);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -70,7 +68,7 @@ public class SimulatedProducer extends AbstractProducer {
 		
 		Order order = new Order(UUID.randomUUID().toString(), new Date(), categories);
 		try {
-			this.sleep(100);
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

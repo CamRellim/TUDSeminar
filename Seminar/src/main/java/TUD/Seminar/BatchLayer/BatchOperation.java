@@ -1,7 +1,6 @@
 package TUD.Seminar.BatchLayer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,12 +10,9 @@ import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 import org.bson.Document;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.client.MongoCollection;
 
 import TUD.Seminar.Constants.Constants;
 import TUD.Seminar.GUI.MainFrame;
-import TUD.Seminar.Kafka.Consumer.Consumer;
 import TUD.Seminar.MongoDB.MongoDBConnector;
 import TUD.Seminar.SimulatedStream.Categories;
 
