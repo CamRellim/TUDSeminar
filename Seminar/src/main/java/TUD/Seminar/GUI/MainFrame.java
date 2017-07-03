@@ -125,7 +125,6 @@ public class MainFrame extends JFrame {
 		SimpleAttributeSet center = new SimpleAttributeSet();
 
 		// Costumize bottomText
-		bottomText.setText("");
 		bottomText.setBackground(new Color(35, 47, 62));
 		bottomText.setEditable(false);
 		bottomText.setPreferredSize(new Dimension(300, 175));
@@ -305,7 +304,11 @@ public class MainFrame extends JFrame {
 		SimpleAttributeSet values = new SimpleAttributeSet();
 		StyleConstants.setFontSize(values, 22);
 
-		String date = "Calculated " + new Date() + ": " + "\n";
+		Date batchDate = new Date();
+		String date = "Calculated " + batchDate + ": " + "\n";
+		
+		String nextBatchCalcDate = "Next Batch Caculation expected " + new Date(batchDate.getTime() + (Constants.BATCH_FREQUENCY));
+		bottomText.setText(nextBatchCalcDate);
 		try {
 			// first remove all previous text
 			doc.remove(batchTitle.length(), doc.getLength() - batchTitle.length());
@@ -398,37 +401,35 @@ public class MainFrame extends JFrame {
 				int os = Integer.parseInt(orderSize.getText().trim());
 				long bf = Long.parseLong(batchFrequency.getText().trim());
 				//TODO: CHANGE TO HOURS bf converted from hours to milliseconds
-				long bfToMs = bf;// * 1000l * 60l * 60l;
+				long bfToMs = bf * 1000l * 60l * 60l;
 				
 				writeFile(os, bfToMs);
+				JOptionPane.showMessageDialog(this, "Changes will be applied after restarting the Application", "Success", JOptionPane.INFORMATION_MESSAGE);
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(this, "Not a valid input", "Error", JOptionPane.ERROR_MESSAGE);
 				configure();				
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(this, "File could not be written", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
 
-	private void writeFile(int orderSize, long batchFrequency) {
+	private void writeFile(int orderSize, long batchFrequency) throws IOException {
         String fileName = "properties/config";
 
-        try {
-            FileWriter fileWriter = new FileWriter(fileName);
+        FileWriter fileWriter = new FileWriter(fileName);
 
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-            bufferedWriter.write("ORDER_SIZE");
-            bufferedWriter.write(" = ");
-            bufferedWriter.write(String.valueOf(orderSize));
-            bufferedWriter.newLine();
-            bufferedWriter.write("BATCH_FREQUENCY");
-            bufferedWriter.write(" = ");
-            bufferedWriter.write(String.valueOf(batchFrequency));
+        bufferedWriter.write("ORDER_SIZE");
+        bufferedWriter.write(" = ");
+        bufferedWriter.write(String.valueOf(orderSize));
+        bufferedWriter.newLine();
+        bufferedWriter.write("BATCH_FREQUENCY");
+        bufferedWriter.write(" = ");
+        bufferedWriter.write(String.valueOf(batchFrequency));
 
-            bufferedWriter.close();
-        }
-        catch(IOException e) {
-         e.printStackTrace();
-        }
+        bufferedWriter.close();
 	}
 
 	private boolean loadConfig() {
