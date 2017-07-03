@@ -1,4 +1,4 @@
-Big Data Regression 02/07/2017
+﻿Big Data Regression 02/07/2017
 
 INFORMATIONEN ZU DEN REGRESSIONEN
 ----------------------------------
@@ -55,9 +55,9 @@ BACK-END INFORMATIONEN
 -----------------------
 Die Big-Data-Verarbeitung erfolgt durch Apache Kafka sowie
 Apache Zookeeper. Der simulierte Datenstream wird mittels
-einem Kafka-Producer erzeugt, welcher diese Daten an die
+einem Kafka-Producer erzeugt, welcher diese Daten an das
 Topic 'orders' sendet. Ein Kafka Consumer liest diese 
-Daten aus der Topic und führt anschließend die oben
+Daten aus dem Topic und führt anschließend die oben
 erklärten Regressionen durch.
 
 

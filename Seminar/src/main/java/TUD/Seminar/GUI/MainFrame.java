@@ -233,7 +233,6 @@ public class MainFrame extends JFrame {
 			speedDoc.insertString(0, speedTitle, title);
 			deviationDoc.insertString(0, deviationTitle, title);
 		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

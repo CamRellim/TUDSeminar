@@ -70,7 +70,6 @@ public class SimulatedProducer extends AbstractProducer {
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		sendMessage("orders", order.getJSONString());	
