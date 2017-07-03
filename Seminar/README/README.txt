@@ -25,31 +25,34 @@ gewählten Kategorien durschnittlich einbringt.
 
 BEDIENUNG DER BENUTZEROBERFLÄCHE
 ---------------------------------
-Der Button 'Start Streaming' startet den simulierten Datenstrom
-sowie die Berechnung der 'Batch-Regression' und der
-'Adjusted-Regression'. Dieser Vorgang kann zu jeder Zeit durch
-ein erneutes Betätigen dieses Buttons, welcher nun die Aufschrift
-'Stop Streaming' trägt, beendet werden.
-Durch das Klicken des Buttons 'Settings' ist es dem Benutzer
-möglich die Anzahl der zu betrachtenden Bestellungen (ORDER_SIZE)
-für die 'Adjusted-Regression' zu verändern. Zudem ist es möglich
-Einstellungen bezüglich des Zeitintervalls der Berchnung der
-'Batch-Regression' vorzunehmen. Die Ergebnisse der beiden
-Regressionen werden ausgegeben über  die Felder 'Batch Regression
-Params' für die Regression auf dem gesamten Datenbestand und
-'Adjusted Regression Params' für die kontinuierlich angepasste
+Der Button 'Start Streaming' startet den von einem Kafka-Producer 
+simulierten Datenstrom und liefert somit die ,für die Berechnung
+der 'Batch-Regression' und der 'Adjusted-Regression', benötigten 
+Daten. Dieser Vorgang kann zu jeder Zeit durch ein erneutes
+Betätigen dieses Buttons, welcher nun die Aufschrift 'Stop
+Streaming' trägt, beendet werden. Durch das Klicken des Buttons
+'Settings' ist es dem Benutzer möglich die Anzahl der zu
+betrachtenden Bestellungen (ORDER_SIZE) für die
+'Adjusted-Regression' zu verändern. Zudem ist es möglich
+Einstellungen bezüglich des Zeitintervalls (in Stunden) der
+Berchnung der 'Batch-Regression' vorzunehmen. Die Ergebnisse der
+beiden Regressionen werden ausgegeben über  die Felder 'Batch
+Regression Params' für die Regression auf dem gesamten Datenbestand
+und 'Adjusted Regression Params' für die kontinuierlich angepasste
 Regression.
 
 
 DATENBANKZUGRIFF
 -----------------
 Der Zugriff auf die in der MongoDB gespeicherten Daten ist
-über den Start der Windows Eingabeaufforderung im '/bin'
-Ordner der MongoDB möglich. Zunächst wird mit dem Befehl
-'mongo' eine MongoDB Shell gestartet, anschließend mit
-'use TUDSeminar' die benötige Datenbank ausgewählt und
-zuletzt durch 'db.orders.find()' auf die Elemente in der
-Collection 'orders' zugegriffen.
+über den Start der des Programmes 'mongo.exe im '/bin'
+Ordner der MongoDB möglich. Um auf die Bestellungen des
+simulierten Datenstreams zuzugreifen ist es nötig zunächst
+mit 'use TUDSeminar' die benötige Datenbank auszuwählen und
+anschließend durch 'db.orders.find()' die Elemente der
+Collection 'orders' zurückzugeben. Mit Hilfe des Befehls
+'db.regression.find()' lassen sich alle zuletzt berechneten
+Batch-Regressionswerte abrufen.
 
 BACK-END INFORMATIONEN
 -----------------------
