@@ -1,5 +1,12 @@
 ﻿Big Data Regression 02/07/2017
 
+SYSTEMANFORDERUNGEN
+--------------------
+Eine Installation von Java 8 wird benötigt.
+Die Umgebungsvariable 'JAVA_HOME' mit Pfad zum
+JRE-Installationsverzeichnis als Variablenwert muss
+gesetzt sein.
+
 INFORMATIONEN ZU DEN REGRESSIONEN
 ----------------------------------
 Das Programm berechnet kontinuierlich zwei verschiedene
