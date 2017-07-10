@@ -1,0 +1,17 @@
+Pr�sentation:
+?	Allgemeine Lambda-Architektur
+?	Unsere Systemarchitektur
+?	Verwendete Software + deren Funktion
+?	Anwendungsbeispiele + unser verwendetes Beispiel
+
+Die Lamda-Architektur:
+ZUSAMMENFASSEN --> http://www.soutier.de/blog/2014/02/23/lambda-architektur/
+
+Unsere Systemarchitektur:
+
+Verwendete Software:
+ZOOKEEPER --> http://www.searchdatacenter.de/definition/Apache-ZooKeeper
+APACHE KAFKA --> http://www.searchenterprisesoftware.de/definition/Apache-Kafka
+MongoDB --> http://www.searchenterprisesoftware.de/definition/MongoDB
+
+Anwendungsbeispiele + Unser Beispiel
