@@ -1,4 +1,4 @@
-Prï¿½sentation:
+Präsentation:
 ?	Allgemeine Lambda-Architektur
 ?	Unsere Systemarchitektur
 ?	Verwendete Software + deren Funktion
@@ -7,11 +7,102 @@ Prï¿½sentation:
 Die Lamda-Architektur:
 ZUSAMMENFASSEN --> http://www.soutier.de/blog/2014/02/23/lambda-architektur/
 
-Unsere Systemarchitektur:
+Warum Lamda-Architektur:
+- Wachsenden Mengen und wachsende Frequenz an Daten
+- Relationale Datenbanken mit klassischer Datenhaltung stoßen schnell an ihre Grenzen
+- Während Updates Sperrung von Tabellenzeilen --> Probleme mit Performance und Verfügbarkeit der Anwendung
+- Verteilung von Datenbank auf Cluster lösen Schwierigkeiten vorübergehend
+- Betrieb Cluster nur mit großem Aufwand und hoher Fehleranfälligkeit
+- NoSQL-Datenbanken (MongoDB) sind von Grund auf für Clusterlösungen und Replizierung entwickelt worden
+
+Fakten zur Lamda-Architektur:
+- Von Nathan Marz entworfen
+- Auf Basis aktueller BigData-Technologien
+- Name leitet sich (vermutlich) vom Lambda-Kalkül als Grundlage der funktionalen Programmierung her
+- Merkmal der funktionalen Programmierung: Konzept von unverändlichen Daten (immutable data), d.h. Veränderungen an Daten erzeugen nur Kopien dieser Daten und die ursprünglichen Daten werde niemals verändert
+- In Lambda-Architektur werden vorhandene Daten niemals aktualisiert
+- Veränderung als eigenständiges Faktum angesehen
+- Veränderung Daten bedeutet ,dass ein neues Faktum für aktuelleren Zeitpunkt hinzukommt (append-only)
+- Zweites grundlegende Prinzip der Lambda-Architektur ist Definition von Information als Funktion der Fakten
+- Information = Funktion(Fakten)
+- Informationen leiten sich aus Berechnungen einzelner Fakten her
+- Verfügbarkeit nicht nur über letzten Wert, sondern über alle Werte
+
+Fehlertoleranz:
+- Reduzierung Anfälligkeit für Programmierfehler durch Trennung in Fakten und Informationen
+- Berechnung enthält Fehler ->Berechnetes Ergebnis wird verworfen und aufgrund Fakten neu ermittelt
+- Algorithmus kann Daten nicht korrumpieren
+
+Ebenen:
+- Lambda-Architektur beschreibt ein BigData-System, das sich in drei Ebenen aufteilt
+- Batch Layer:
+	- Enthält sämtliche Fakten in redundanter (und damit fehlertoleranter) Ausführung
+	- Berechnungen auf gesamten Fakten
+	- Mit einer hohen Latenz zu rechnen
+	- Berechnungen können durchaus Stunden brauchen
+	- Hinzufügen neuer Fakten zu vorhandenen Fakten hinzugefügt und Berücksichtigung beim nächsten Durchlauf der Berechnungen
+	
+- Serving Layer:
+	- Abfangen hoher Latenz des Batch Layers durch Speicherung der berechnenten Ergebnisse im Serving Layer
+	- Abfragen der gewünschten Informationen von externen Systemen im Serving Layer
+	- Berechnung fertig -> Ersetzen aller Daten im Serving Layer
+	- Entfallen komplexer Updatemechanismen, Zugriff auf die Informationen zu skalieren wird einfacher
+	
+- Speed Layer:
+	- Latenz Batch Layer hat auch Auswirkungen auf Serving Layer
+	- Serving Layer besitzt niemals aktuellsten Stand
+	- Schließung der Lücke durch Speed Layer
+	- Enthält alle neuen Daten
+	- Führt auf diesen Berechnungen aus und speichert temporär
+	- Löschung temorärer Dateien bei aufholen des Batch Layers
+	- Einzig komplexe Ebene der Architektur
+	- Schwierigkeit: Kombination aus bereits berechneten und neu ankommenden Daten
+	- Anschließen eines externes Systems an Serving und Speed Layer
+
 
 Verwendete Software:
 ZOOKEEPER --> http://www.searchdatacenter.de/definition/Apache-ZooKeeper
-APACHE KAFKA --> http://www.searchenterprisesoftware.de/definition/Apache-Kafka
-MongoDB --> http://www.searchenterprisesoftware.de/definition/MongoDB
+- Open-Source-API von Apache
+- Ermöglicht Synchronisation verteilter Prozesse in großen Systemen
+- Erhalten alle Clients, die Anfragen stellen immer konsistente Daten
+- Einsetzen auf einem Server-Cluster, um singulären Ausfallpunkt (SpoF / Single Point of Failure) zu vermeiden
+- Verwendet verteiltes Übereinstimmungs-Protokoll, um herauszufinden, welcher Node im ZooKeeper-Service führend zu einem bestimmten Zeitpunkt ist
+- Führende Node weist jedem Update Zeitstempel zu, um Rangordnung aufrecht zu erhalten
+- Sobald Mehrheit der Nodes meldet, ein Zeitstempel-Update erhalten zu haben, kann führender Rechner Quorum deklarieren. D.h., dass sich alle Daten, die in diesem Update enthalten sind, mit den Elementen des Daten-Speichers koordinieren lassen
+- Verwendung Quorums stellt sicher, dass Service immer konsistente Antworten liefert
+- Benutzt von Yahoo!, Netflix, Twitter, and LinkedIn
 
-Anwendungsbeispiele + Unser Beispiel
+APACHE KAFKA --> http://www.searchenterprisesoftware.de/definition/Apache-Kafka
+- Verteiltes Publish Subscribe Messaging-System
+- Soll traditionelle Message Broker ersetzen
+- Ursprünglich von LinkedIn entwickelt
+- 2011 von der Apache Software Foundation als Open Source weiterentwickelt, um neue Dateninfrastrukturen zu nutzen, die auf parallel arbeitenden herkömmlichen Clustern basieren
+- Message Broker sind Art Middleware, die Nachrichten von einer Sprache in andere, i.d.R. weiter verbreitete Sprache übersetzen
+- Dienen auch dazu, Datenströme von der Verarbeitung zu entkoppeln und nicht gesendeten Nachrichten zu puffern
+- Kafka verbessert herkömmliche Message Broker durch Fortschritte beim Datendurchsatz, bei Partitionierung, Replikation, Latenz und Zuverlässigkeit
+- Einsatzzwecke Kafka:
+	- Messaging
+	- Echtzeit-Tracken der Aktivitäten von und auf Webseiten
+	- Überwachen der operativen Kennzahlen von verteilten Anwendungen
+	- Aggregation der Log-Dateien von zahlreichen Servern
+	- Event Sourcing beim Protokollieren und Anfordern von Statusänderungen in einer Datenbank
+	- Übergeben von Log-Dateien, in denen verteilte Systeme ihre Daten synchronisieren
+	- Wiederherstellen von Daten nach dem Ausfall von Systemen
+	
+	
+
+MongoDB --> http://www.searchenterprisesoftware.de/definition/MongoDB
+- Open-Source-Datenbank
+- Entwicklern Dwight Merriman und Eliot Horowitz
+- Probleme bezüglich Entwicklung und Skalierbarkeit bei herkömmlichen relationale Datenbanken
+- Name der Datenbank vom englischen Wort humongous (Deutsch: riesig, gigantisch)
+- Verwendet dokumentenorientiertes Datenmodell
+- Datenbank-Typ NoSQL
+- Im Gegensatz zu relationalen Datenbanken, die Tabellen und Zeilen einsetzen, beruht MongoDB auf Architektur von Sammlungen und Dokumenten
+- Dokumente umfassen mehrere Schlüsselwert-Paare und bilden in MongoDB Basiseinheit für Daten
+- Sammlungen enthalten mehrere Dokumente und fungieren als Äquivalent von relationalen Datenbanktabellen
+- Unterstützt dynamisches Schema-Design, sodass die Dokumente in einer Sammlung verschiedene Felder und Strukturen haben können
+- Verwendet BSON- Format, das binäre Darstellung von JSON-ähnlichen Dokumenten bietet
+- Mithilfe von automatischem „Sharding“ (Datenbank-Partitionierung) Daten in einer Sammlung auf mehrere Systeme verteilen -> Erreichen horizontaler Skalierbarkeit
+
+Anwendungsbeispiel + Unser Beispiel
