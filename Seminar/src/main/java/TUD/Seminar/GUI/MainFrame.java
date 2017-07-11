@@ -386,22 +386,25 @@ public class MainFrame extends JFrame {
 	private void configure() {
 		JTextField orderSize = new JTextField(5);
 		JTextField batchFrequency = new JTextField(5);
+		
+		orderSize.setText(String.valueOf(Constants.ORDER_SIZE));
+		batchFrequency.setText(String.valueOf(Constants.BATCH_FREQUENCY));
 
 		JPanel settingsPanel = new JPanel();
 		settingsPanel.add(new JLabel("ORDER_SIZE:"));
 		settingsPanel.add(orderSize);
-		settingsPanel.add(Box.createHorizontalStrut(15)); // a spacer
-		settingsPanel.add(new JLabel("BATCH_FREQUENCY (hours):"));
+		settingsPanel.add(Box.createHorizontalStrut(15));
+		settingsPanel.add(new JLabel("BATCH_FREQUENCY:"));
 		settingsPanel.add(batchFrequency);
 
 		int result = JOptionPane.showConfirmDialog(this, settingsPanel, "Settings",
 				JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			try {
-				int os = Integer.parseInt(orderSize.getText().trim());
-				long bf = Long.parseLong(batchFrequency.getText().trim());
+				int os = Math.abs(Integer.parseInt(orderSize.getText().trim()));
+				long bf = Math.abs(Long.parseLong(batchFrequency.getText().trim()));
 				//TODO: CHANGE TO HOURS bf converted from hours to milliseconds
-				long bfToMs = bf * 1000l * 60l * 60l;
+				long bfToMs = bf;
 				
 				writeFile(os, bfToMs);
 				JOptionPane.showMessageDialog(this, "Changes will be applied after restarting the Application", "Success", JOptionPane.INFORMATION_MESSAGE);

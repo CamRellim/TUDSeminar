@@ -7,6 +7,13 @@ Die Umgebungsvariable 'JAVA_HOME' mit Pfad zum
 JRE-Installationsverzeichnis als Variablenwert muss
 gesetzt sein.
 
+START-ANLEITUNG
+----------------
+1. Zookeeper starten (zkserver.bat ausführen)
+2. Kafka starten (kafka.bat ausführen)
+3. MongoDB starten (mongoDB.bat ausführen)
+4. Das Java Programm starten (TUDSeminar.jar ausführen)
+
 INFORMATIONEN ZU DEN REGRESSIONEN
 ----------------------------------
 Das Programm berechnet kontinuierlich zwei verschiedene
@@ -52,7 +59,7 @@ Regression.
 DATENBANKZUGRIFF
 -----------------
 Der Zugriff auf die in der MongoDB gespeicherten Daten ist
-über den Start der des Programmes 'mongo.exe im '/bin'
+über den Start des Programmes 'mongo.exe im '/bin'
 Ordner der MongoDB möglich. Um auf die Bestellungen des
 simulierten Datenstreams zuzugreifen ist es nötig zunächst
 mit 'use TUDSeminar' die benötige Datenbank auszuwählen und
