@@ -1,4 +1,4 @@
-Pr‰sentation:
+Pr√§sentation:
 ?	Allgemeine Lambda-Architektur
 ?	Unsere Systemarchitektur
 ?	Verwendete Software + deren Funktion
@@ -9,84 +9,84 @@ ZUSAMMENFASSEN --> http://www.soutier.de/blog/2014/02/23/lambda-architektur/
 
 Warum Lamda-Architektur:
 - Wachsenden Mengen und wachsende Frequenz an Daten
-- Relationale Datenbanken mit klassischer Datenhaltung stoﬂen schnell an ihre Grenzen
-- W‰hrend Updates Sperrung von Tabellenzeilen --> Probleme mit Performance und Verf¸gbarkeit der Anwendung
-- Verteilung von Datenbank auf Cluster lˆsen Schwierigkeiten vor¸bergehend
-- Betrieb Cluster nur mit groﬂem Aufwand und hoher Fehleranf‰lligkeit
-- NoSQL-Datenbanken (MongoDB) sind von Grund auf f¸r Clusterlˆsungen und Replizierung entwickelt worden
+- Relationale Datenbanken mit klassischer Datenhaltung sto√üen schnell an ihre Grenzen
+- W√§hrend Updates Sperrung von Tabellenzeilen --> Probleme mit Performance und Verf√ºgbarkeit der Anwendung
+- Verteilung von Datenbank auf Cluster l√∂sen Schwierigkeiten vor√ºbergehend
+- Betrieb Cluster nur mit gro√üem Aufwand und hoher Fehleranf√§lligkeit
+- NoSQL-Datenbanken (MongoDB) sind von Grund auf f√ºr Clusterl√∂sungen und Replizierung entwickelt worden
 
 Fakten zur Lamda-Architektur:
 - Von Nathan Marz entworfen
 - Auf Basis aktueller BigData-Technologien
-- Name leitet sich (vermutlich) vom Lambda-Kalk¸l als Grundlage der funktionalen Programmierung her
-- Merkmal der funktionalen Programmierung: Konzept von unver‰ndlichen Daten (immutable data), d.h. Ver‰nderungen an Daten erzeugen nur Kopien dieser Daten und die urspr¸nglichen Daten werde niemals ver‰ndert
+- Name leitet sich (vermutlich) vom Lambda-Kalk√ºl als Grundlage der funktionalen Programmierung her
+- Merkmal der funktionalen Programmierung: Konzept von unver√§ndlichen Daten (immutable data), d.h. Ver√§nderungen an Daten erzeugen nur Kopien dieser Daten und die urspr√ºnglichen Daten werde niemals ver√§ndert
 - In Lambda-Architektur werden vorhandene Daten niemals aktualisiert
-- Ver‰nderung als eigenst‰ndiges Faktum angesehen
-- Ver‰nderung Daten bedeutet ,dass ein neues Faktum f¸r aktuelleren Zeitpunkt hinzukommt (append-only)
+- Ver√§nderung als eigenst√§ndiges Faktum angesehen
+- Ver√§nderung Daten bedeutet ,dass ein neues Faktum f√ºr aktuelleren Zeitpunkt hinzukommt (append-only)
 - Zweites grundlegende Prinzip der Lambda-Architektur ist Definition von Information als Funktion der Fakten
 - Information = Funktion(Fakten)
 - Informationen leiten sich aus Berechnungen einzelner Fakten her
-- Verf¸gbarkeit nicht nur ¸ber letzten Wert, sondern ¸ber alle Werte
+- Verf√ºgbarkeit nicht nur √ºber letzten Wert, sondern √ºber alle Werte
 
 Fehlertoleranz:
-- Reduzierung Anf‰lligkeit f¸r Programmierfehler durch Trennung in Fakten und Informationen
-- Berechnung enth‰lt Fehler ->Berechnetes Ergebnis wird verworfen und aufgrund Fakten neu ermittelt
+- Reduzierung Anf√§lligkeit f√ºr Programmierfehler durch Trennung in Fakten und Informationen
+- Berechnung enth√§lt Fehler ->Berechnetes Ergebnis wird verworfen und aufgrund Fakten neu ermittelt
 - Algorithmus kann Daten nicht korrumpieren
 
 Ebenen:
 - Lambda-Architektur beschreibt ein BigData-System, das sich in drei Ebenen aufteilt
 - Batch Layer:
-	- Enth‰lt s‰mtliche Fakten in redundanter (und damit fehlertoleranter) Ausf¸hrung
+	- Enth√§lt s√§mtliche Fakten in redundanter (und damit fehlertoleranter) Ausf√ºhrung
 	- Berechnungen auf gesamten Fakten
 	- Mit einer hohen Latenz zu rechnen
-	- Berechnungen kˆnnen durchaus Stunden brauchen
-	- Hinzuf¸gen neuer Fakten zu vorhandenen Fakten hinzugef¸gt und Ber¸cksichtigung beim n‰chsten Durchlauf der Berechnungen
+	- Berechnungen k√∂nnen durchaus Stunden brauchen
+	- Hinzuf√ºgen neuer Fakten zu vorhandenen Fakten hinzugef√ºgt und Ber√ºcksichtigung beim n√§chsten Durchlauf der Berechnungen
 	
 - Serving Layer:
 	- Abfangen hoher Latenz des Batch Layers durch Speicherung der berechnenten Ergebnisse im Serving Layer
-	- Abfragen der gew¸nschten Informationen von externen Systemen im Serving Layer
+	- Abfragen der gew√ºnschten Informationen von externen Systemen im Serving Layer
 	- Berechnung fertig -> Ersetzen aller Daten im Serving Layer
 	- Entfallen komplexer Updatemechanismen, Zugriff auf die Informationen zu skalieren wird einfacher
 	
 - Speed Layer:
 	- Latenz Batch Layer hat auch Auswirkungen auf Serving Layer
 	- Serving Layer besitzt niemals aktuellsten Stand
-	- Schlieﬂung der L¸cke durch Speed Layer
-	- Enth‰lt alle neuen Daten
-	- F¸hrt auf diesen Berechnungen aus und speichert tempor‰r
-	- Lˆschung temor‰rer Dateien bei aufholen des Batch Layers
+	- Schlie√üung der L√ºcke durch Speed Layer
+	- Enth√§lt alle neuen Daten
+	- F√ºhrt auf diesen Berechnungen aus und speichert tempor√§r
+	- L√∂schung temor√§rer Dateien bei aufholen des Batch Layers
 	- Einzig komplexe Ebene der Architektur
 	- Schwierigkeit: Kombination aus bereits berechneten und neu ankommenden Daten
-	- Anschlieﬂen eines externes Systems an Serving und Speed Layer
+	- Anschlie√üen eines externes Systems an Serving und Speed Layer
 
 
 Verwendete Software:
 ZOOKEEPER --> http://www.searchdatacenter.de/definition/Apache-ZooKeeper
 - Open-Source-API von Apache
-- Ermˆglicht Synchronisation verteilter Prozesse in groﬂen Systemen
+- Erm√∂glicht Synchronisation verteilter Prozesse in gro√üen Systemen
 - Erhalten alle Clients, die Anfragen stellen immer konsistente Daten
-- Einsetzen auf einem Server-Cluster, um singul‰ren Ausfallpunkt (SpoF / Single Point of Failure) zu vermeiden
-- Verwendet verteiltes ‹bereinstimmungs-Protokoll, um herauszufinden, welcher Node im ZooKeeper-Service f¸hrend zu einem bestimmten Zeitpunkt ist
-- F¸hrende Node weist jedem Update Zeitstempel zu, um Rangordnung aufrecht zu erhalten
-- Sobald Mehrheit der Nodes meldet, ein Zeitstempel-Update erhalten zu haben, kann f¸hrender Rechner Quorum deklarieren. D.h., dass sich alle Daten, die in diesem Update enthalten sind, mit den Elementen des Daten-Speichers koordinieren lassen
+- Einsetzen auf einem Server-Cluster, um singul√§ren Ausfallpunkt (SpoF / Single Point of Failure) zu vermeiden
+- Verwendet verteiltes √úbereinstimmungs-Protokoll, um herauszufinden, welcher Node im ZooKeeper-Service f√ºhrend zu einem bestimmten Zeitpunkt ist
+- F√ºhrende Node weist jedem Update Zeitstempel zu, um Rangordnung aufrecht zu erhalten
+- Sobald Mehrheit der Nodes meldet, ein Zeitstempel-Update erhalten zu haben, kann f√ºhrender Rechner Quorum deklarieren. D.h., dass sich alle Daten, die in diesem Update enthalten sind, mit den Elementen des Daten-Speichers koordinieren lassen
 - Verwendung Quorums stellt sicher, dass Service immer konsistente Antworten liefert
 - Benutzt von Yahoo!, Netflix, Twitter, and LinkedIn
 
 APACHE KAFKA --> http://www.searchenterprisesoftware.de/definition/Apache-Kafka
 - Verteiltes Publish Subscribe Messaging-System
 - Soll traditionelle Message Broker ersetzen
-- Urspr¸nglich von LinkedIn entwickelt
-- 2011 von der Apache Software Foundation als Open Source weiterentwickelt, um neue Dateninfrastrukturen zu nutzen, die auf parallel arbeitenden herkˆmmlichen Clustern basieren
-- Message Broker sind Art Middleware, die Nachrichten von einer Sprache in andere, i.d.R. weiter verbreitete Sprache ¸bersetzen
-- Dienen auch dazu, Datenstrˆme von der Verarbeitung zu entkoppeln und nicht gesendeten Nachrichten zu puffern
-- Kafka verbessert herkˆmmliche Message Broker durch Fortschritte beim Datendurchsatz, bei Partitionierung, Replikation, Latenz und Zuverl‰ssigkeit
+- Urspr√ºnglich von LinkedIn entwickelt
+- 2011 von der Apache Software Foundation als Open Source weiterentwickelt, um neue Dateninfrastrukturen zu nutzen, die auf parallel arbeitenden herk√∂mmlichen Clustern basieren
+- Message Broker sind Art Middleware, die Nachrichten von einer Sprache in andere, i.d.R. weiter verbreitete Sprache √ºbersetzen
+- Dienen auch dazu, Datenstr√∂me von der Verarbeitung zu entkoppeln und nicht gesendeten Nachrichten zu puffern
+- Kafka verbessert herk√∂mmliche Message Broker durch Fortschritte beim Datendurchsatz, bei Partitionierung, Replikation, Latenz und Zuverl√§ssigkeit
 - Einsatzzwecke Kafka:
 	- Messaging
-	- Echtzeit-Tracken der Aktivit‰ten von und auf Webseiten
-	- ‹berwachen der operativen Kennzahlen von verteilten Anwendungen
+	- Echtzeit-Tracken der Aktivit√§ten von und auf Webseiten
+	- √úberwachen der operativen Kennzahlen von verteilten Anwendungen
 	- Aggregation der Log-Dateien von zahlreichen Servern
-	- Event Sourcing beim Protokollieren und Anfordern von Status‰nderungen in einer Datenbank
-	- ‹bergeben von Log-Dateien, in denen verteilte Systeme ihre Daten synchronisieren
+	- Event Sourcing beim Protokollieren und Anfordern von Status√§nderungen in einer Datenbank
+	- √úbergeben von Log-Dateien, in denen verteilte Systeme ihre Daten synchronisieren
 	- Wiederherstellen von Daten nach dem Ausfall von Systemen
 	
 	
@@ -94,15 +94,31 @@ APACHE KAFKA --> http://www.searchenterprisesoftware.de/definition/Apache-Kafka
 MongoDB --> http://www.searchenterprisesoftware.de/definition/MongoDB
 - Open-Source-Datenbank
 - Entwicklern Dwight Merriman und Eliot Horowitz
-- Probleme bez¸glich Entwicklung und Skalierbarkeit bei herkˆmmlichen relationale Datenbanken
+- Probleme bez√ºglich Entwicklung und Skalierbarkeit bei herk√∂mmlichen relationale Datenbanken
 - Name der Datenbank vom englischen Wort humongous (Deutsch: riesig, gigantisch)
 - Verwendet dokumentenorientiertes Datenmodell
 - Datenbank-Typ NoSQL
 - Im Gegensatz zu relationalen Datenbanken, die Tabellen und Zeilen einsetzen, beruht MongoDB auf Architektur von Sammlungen und Dokumenten
-- Dokumente umfassen mehrere Schl¸sselwert-Paare und bilden in MongoDB Basiseinheit f¸r Daten
-- Sammlungen enthalten mehrere Dokumente und fungieren als ƒquivalent von relationalen Datenbanktabellen
-- Unterst¸tzt dynamisches Schema-Design, sodass die Dokumente in einer Sammlung verschiedene Felder und Strukturen haben kˆnnen
-- Verwendet BSON- Format, das bin‰re Darstellung von JSON-‰hnlichen Dokumenten bietet
-- Mithilfe von automatischem ÑShardingì (Datenbank-Partitionierung) Daten in einer Sammlung auf mehrere Systeme verteilen -> Erreichen horizontaler Skalierbarkeit
+- Dokumente umfassen mehrere Schl√ºsselwert-Paare und bilden in MongoDB Basiseinheit f√ºr Daten
+- Sammlungen enthalten mehrere Dokumente und fungieren als √Ñquivalent von relationalen Datenbanktabellen
+- Unterst√ºtzt dynamisches Schema-Design, sodass die Dokumente in einer Sammlung verschiedene Felder und Strukturen haben k√∂nnen
+- Verwendet BSON- Format, das bin√§re Darstellung von JSON-√§hnlichen Dokumenten bietet
+- Mithilfe von automatischem ‚ÄûSharding‚Äú (Datenbank-Partitionierung) Daten in einer Sammlung auf mehrere Systeme verteilen -> Erreichen horizontaler Skalierbarkeit
 
-Anwendungsbeispiel + Unser Beispiel
+Funktionsweise unseres Programms:
+- Simulierter Datenstream wird von Kafka Producer erzeugt
+- Datenstream enth√§lt eintreffende Bestellungen eines Online-Handles
+- Jede Sekunde 10 Bestellungen
+- Bestellung besteht aus Produkten verschiedener Kategorien
+- Anzahl der Produkte pro Kategorie zuf√§llig (auch 0 m√∂glich)
+- Preis der jeweiligen Produkte aus den Kategorien als Intervall vorgegeben
+- Dadurch entsteht eine gewisse Rangordnung unter den Kategorien
+(- Preisintervalle vorlesen)
+- Producer schreibt diese eintreffenden Bestellungen an Kafka Topic "orders"
+- Kafka Consumer liest aus dieser Topic
+- Im Batch Layer werden nun erstmal alle einkommenden Bestellungen in der MongoDB abgespeichert
+- Bspw. ein Mal am Tag wird auf dem gesamten Datenbestand der MongoDB eine Regression auf den durchschnittlichen Warenkorb durchgef√ºhrt (Batch Regression)
+- Durch diese Regression l√§sst sich erkennen wie viel ein Produkt einer bestimmten Kategorie dem Online-Handel voraussichtlich einbringt
+- Um konstant auf dem aktuellsten Stand zu bleiben wird eine weitere Regression durchlaufend auf den letzten X eintreffenden Bestellungen durchgef√ºhrt (Speed Regression)
+- Diese Ergebnisse flie√üen dann gewichtet in die Batch Regression ein, welche somit fortlaufend √ºber den Tag angepasst und am Ende des Tages neu berechnet wird
+- In der Datenbank sind zu jeder Zeit alle eingetroffenen Bestellungen unver√§ndert einzusehen sowie alle berechneten Batch Regressionswerte
